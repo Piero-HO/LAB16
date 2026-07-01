@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 
 import type { Movie } from "@/types/movie";
 
+import { TMDB_IMAGE_BASE_URL } from "@/lib/tmdb";
+
 import {
   Badge,
 } from "@/components/ui/badge";
@@ -21,7 +23,11 @@ const MovieCard = ({ movie }: Props) => {
     <article>
       <Card className="overflow-hidden">
         <img
-          src={movie.posterUrl}
+          src={
+            movie.poster_path
+              ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}`
+              : undefined
+          }
           alt={movie.title}
           className="aspect-2/3 w-full object-cover"
         />
@@ -31,7 +37,7 @@ const MovieCard = ({ movie }: Props) => {
             variant="secondary"
             className="w-fit"
           >
-            {movie.genre}
+            Rating {movie.vote_average.toFixed(1)}
           </Badge>
 
           <CardTitle>
@@ -40,8 +46,8 @@ const MovieCard = ({ movie }: Props) => {
         </CardHeader>
 
         <CardContent>
-          <p className="mb-4 text-sm text-muted-foreground">
-            {movie.synopsis}
+          <p className="mb-4 line-clamp-3 text-sm text-muted-foreground">
+            {movie.overview}
           </p>
 
           <Link

@@ -1,8 +1,10 @@
-import { movies } from "@/data/movies";
+import { usePopularMovies } from "@/hooks/use-popular-movies";
 
 import MovieCard from "./movie-card";
 
 const MoviesGrid = () => {
+  const { data: movies, isLoading, isError } = usePopularMovies();
+
   return (
     <section className="py-4">
       <header className="mb-8">
@@ -15,21 +17,33 @@ const MoviesGrid = () => {
         </p>
       </header>
 
-      <div
-        className="
-          grid
-          gap-6
-          md:grid-cols-2
-          lg:grid-cols-3
-        "
-      >
-        {movies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-          />
-        ))}
-      </div>
+      {isLoading && (
+        <p className="text-muted-foreground">Loading movies...</p>
+      )}
+
+      {isError && (
+        <p className="text-destructive">
+          Could not load movies. Please try again later.
+        </p>
+      )}
+
+      {!isLoading && !isError && (
+        <div
+          className="
+            grid
+            gap-6
+            md:grid-cols-2
+            lg:grid-cols-3
+          "
+        >
+          {movies?.slice(0, 6).map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };
